@@ -46,7 +46,7 @@
 					<h1>Bitcoin for Distributed Systems Enthusasists</h1>
 					<h3>Discovery and Consensus in one of the most popular distributed logs.</h3>
 					<p>
-						<small><a href="http://justinarthur.com/">Justin Turner Arthur</a> / <a href="http://twitter.com/JustinTArthur">@JustinTArthur</a></small> / <a href="https://github.com/JustinTArthur">https://github.com/JustinTArthur</a></small>
+						<small><a href="http://justinarthur.com/">Justin Turner Arthur</a> / <a href="http://twitter.com/JustinTArthur">@JustinTArthur</a> / <a href="https://github.com/JustinTArthur">https://github.com/JustinTArthur</a></small>
 					</p>
 				</section>
 
@@ -62,9 +62,10 @@
                     <h2>Bitcoin as a Distributed System</h2>
                     <h3>What gets distributed?</h3>
                     <h4>The Blockchain</h4>
-                    <p>An append-only log of every transaction that has moved bitcoin currency from one address to another in the Bitcoin system.</p>
+                    <p>An append-only log of every transaction that has moved Bitcoin currency from one address to another in the Bitcoin system.</p>
+                    <p class="fragment">You're more likely to hear <i>ledger</i> instead of <i>log</i>.</p>
 
-                    <aside class="notes">Ledger term often used instead of </aside>
+                    <aside class="notes"></aside>
                 </section>
 
                 <section>
@@ -74,7 +75,7 @@
                         <li>scaling storage capacity</li>
                         <li>scaling computation</li>
                     </ul>
-                    <h3>It is a distributed system for the sake of&hellip;</h3>
+                    <h3 class="fragment">It is a distributed system for the sake of&hellip;</h3>
                     <ul>
                         <li>redundancy and fault tolerance</li>
                         <li>anonymity</li>
@@ -82,6 +83,78 @@
                     </ul>
 
                     <aside class="notes"></aside>
+                </section>
+
+                <section>
+                    <h2>P2P Node Discovery</h2>
+                    <ul>
+                        <li>First, check actively-maintained DNS records</li>
+                        <li style="text-decoration: line-through;">Query IRC channels</li>
+                        <li>Worst case scenario, use hardcoded list of nodes that were known active.</li>
+                    </ul>
+
+                    <aside class="notes">Similar to gnutella and other p2p networks.</aside>
+                </section>
+
+                <section>
+                    <h2>The P2P Network</h2>
+                    <h3>From the network, a Bitcoin node gleams:</h3>
+                    <ul>
+                        <li>A list of IP addresses known to peers.</li>
+                        <li>Broadcasted transactions that are valid based on its current/main copy of the blockchain.</li>
+                    </ul>
+                    <h3>A full node also maintains:</h3>
+                    <ul>
+                        <li>A copy of the blockchain.</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h2>Consensus</h2>
+                    <h3>The consensus algorithm attempts to solve two problems:</h3>
+                    <ul>
+                        <li>What transactions are committed to the blockchain?</li>
+                        <li>How does new coin get injected into the system?</li>
+                    </ul>
+
+                    <aside class="notes">Similar to gnutella and other p2p networks.</aside>
+                </section>
+
+                <section>
+                    <h2>Consensus: What transactions are committed to the blockchain?</h2>
+                    <h3>We could use the leader/follower pattern of Raft.</h3>
+                </section>
+
+                <section>
+                    <p>But we want to inject new coins in a way that rewards actors contributing to the system.</p>
+                    <p>We can reward actors that validate and commit transactions to the blockchain.</p>
+                    <p>In Raft, we invite race-to-leader abuse when being a leader is reward-able.</p>
+                </section>
+
+                <section>
+                    <p>So instead of leader election, we have <em>mining.</em></p>
+                    <p class="fragment">A miner:
+                    <ol>
+                        <li class="fragment">Asks a node for a <em>block</em> of uncommitted valid txs.</li>
+                        <li class="fragment">Adds a reward-me tx of its own to the block.</li>
+                        <li class="fragment">Performs proof-of-work that signs block as confirmed.</li>
+                        <li class="fragment">If able to successfully confirm block, has node broadcast it as part of blockchain.</li>
+                    </ol>
+                    </p>
+                </section>
+
+                <section>
+                    <h2>Proof-of-Work</h2>
+                    The bulk of the work is artificially difficult as a way to throttle the system:
+                    <code>
+                    block_hash = SHA256(SHA256(EndianFlipForEach32Bits(First80BytesOf(data and nonce))))
+                    if block_hash < difficulty_target:
+                        tell everyone about our new block in the blockchain
+                        exit and try to generate/mine another block
+                    else:
+                        nonce = nonce + 1
+                        block_hash = SHA256(SHA256(EndianFlipForEach32Bits(First80BytesOf(data and nonce))))
+                    </code>
                 </section>
 
 				<!-- Example of nested vertical slides -->
